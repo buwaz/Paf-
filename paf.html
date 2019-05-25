@@ -1,0 +1,86 @@
+<html>
+   
+   <head>
+      <title>Add Order</title>
+   </head>
+   
+   <body>
+ 
+ 
+      <?php
+        if(isset($_POST['add'])) {
+           $dbhost = 'localhost:3036';
+           $dbuser = 'root';
+           $dbpass = '';
+           $conn = mysql_connect($dbhost, $dbuser, $dbpass);
+           
+           if(! $conn ) {
+              die('Could not connect: ' . mysql_error());
+           }
+           
+           if(! get_magic_quotes_gpc() ) {
+              $order_id = addslashes ($_POST['order_id']);
+              $order_quntity = addslashes ($_POST['order_quntity']);
+           }else {
+              $order_id = $_POST['order_id'];
+              $order_quntity = $_POST['order_quntity'];
+           }
+           
+           $date = $_POST['date'];
+           
+           $sql = "INSERT INTO order_list". "(order_id,order_quntity,date,
+              join_date) ". "VALUES('$order_id','$order_quntity',$date, NOW())";
+             
+           mysql_select_db('ordr_manage');
+           $retval = mysql_query( $sql, $conn );
+           
+           if(! $retval ) {
+              die('Could not enter data: ' . mysql_error());
+           }
+           
+           echo "Entered data successfully\n";
+           
+           mysql_close($conn);
+        }else {
+           ?>
+           
+               <form method = "post" action = "<?php $_PHP_SELF ?>">
+                  <table width = "400" border = "0" cellspacing = "1"
+                    cellpadding = "2">
+                 
+                     <tr>
+                        <td width = "100">Order_ID</td>
+                        <td><input name = "order_id" type = "text"
+                          id = "order_id"></td>
+                     </tr>
+                 
+                     <tr>
+                        <td width = "100">Orde_Quntity</td>
+                        <td><input name = "order_quntity" type = "text"
+                          id = "order_quntity"></td>
+                     </tr>
+                 
+                     <tr>
+                        <td width = "100">Date</td>
+                        <td><input name = "date" type = "text"
+                          id = "date"></td>
+                     </tr>
+                 
+                 
+                     <tr>
+                        <td width = "100"> </td>
+                        <td>
+                           <input name = "add" type = "submit" id = "add"
+                             value = "Add Order">
+                        </td>
+                     </tr>
+                 
+                  </table>
+               </form>
+           
+            <?php
+        }
+     ?>
+   
+   </body>
+</html>
